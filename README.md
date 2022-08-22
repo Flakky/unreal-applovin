@@ -1,6 +1,8 @@
 # Unreal AppLovin SDK plugin
 Unofficial Applovin SDK integration for Unreal Engine. Plugin also includes several networks integrations.
 
+![Applovin Unreal Engine](/Resources/icon128.png)
+
 ## Integration
 
 ### Platforms
@@ -33,15 +35,15 @@ Unofficial Applovin SDK integration for Unreal Engine. Plugin also includes seve
 
 ### Install
 
-1. Clone repository or donload zip archive. *Please note, that repository uses Git LFS for iOS libraries and uassets.*
+1. Clone repository or download zip archive. *Please note, that repository uses Git LFS for iOS libraries and uassets.*
 2. Create `AppLovin` folder in `Plugins` folder of your project and place everything there. Path should look like this: `Project/Plugins/AppLovin/AppLovin.uplugin`.
 3. Regenerate project's files and compile it.
 4. Plugin should enable automatically. But if don't, open editor, and enable it via Plugins manager window.
 5. Fill your networks id's in UPL files.
 
-![Use Applovin in Blueprints](/Docs/Seup_Keys_Android.jpg)
+![Setup AppLovin keys for Android](/Docs/Seup_Keys_Android.jpg)
 
-![Use Applovin in Blueprints](/Docs/Seup_Keys_IOS.jpg)
+![Setup AppLovin keys for IOS](/Docs/Seup_Keys_IOS.jpg)
 
 ### Usage
 
