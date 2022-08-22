@@ -1,7 +1,7 @@
 # Unreal AppLovin SDK plugin
 Unofficial Applovin SDK integration for Unreal Engine. Plugin also includes several networks integrations.
 
-![Applovin Unreal Engine](/Resources/icon128.png)
+![Applovin Unreal Engine](/Resources/Icon128.png)
 
 ## Integration
 
