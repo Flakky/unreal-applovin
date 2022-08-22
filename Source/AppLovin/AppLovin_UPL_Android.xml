@@ -1,0 +1,213 @@
+<?xml version="1.0" encoding="utf-8"?>
+<root xmlns:android="http://schemas.android.com/apk/res/android">
+	<init>
+		<log text="AppLovin Initialization"/>
+	</init>
+
+	<androidManifestUpdates>		
+		<addElements tag="application">
+			<meta-data android:name="applovin.sdk.key" android:value="R5ZeDg0t8rV5BQ4h_72SUwzDKUOipd1Ju_H3yph9eKZV6NZBDqI_rLKZmyFWiyFWdOn4ITSHwMdob2TtWHuzio"/>
+			
+			<meta-data android:name="applovin.sdk.verbose_logging" android:value="true"/>
+			
+			<!-- AdMob -->
+			<meta-data android:name="com.google.android.gms.ads.APPLICATION_ID" android:value="ca-app-pub-8420324982512207~7588082537"/>
+        </addElements>
+
+        <addAttribute tag="application" name="android:networkSecurityConfig" value="@xml/network_security_config"/>
+		
+		
+            
+        </androidManifestUpdates>
+
+	<buildscriptGradleAdditions>
+		<insert>
+			repositories {
+				maven { url 'https://artifacts.applovin.com/android' }
+			}
+			dependencies {
+				classpath "com.applovin.quality:AppLovinQualityServiceGradlePlugin:3.+"
+			}
+		</insert>
+	</buildscriptGradleAdditions>
+    
+	<buildGradleAdditions>
+            <!-- AppLovin SDK -->
+		<insert>
+			repositories {
+				google()
+				mavenCentral()
+			}
+			dependencies {
+				implementation 'com.applovin:applovin-sdk:11.4.4'
+			}
+			
+		</insert>
+		<!-- Networks integrations -->
+		<!-- Facebook -->
+		<insert>
+			dependencies {
+				implementation 'com.applovin.mediation:facebook-adapter:6.11.0.5'
+			}
+		</insert>
+		<!-- AdMob -->
+		<insert>
+			dependencies {
+				implementation 'com.applovin.mediation:google-adapter:21.0.0.3'
+			}
+		</insert>
+		<!-- AdColony -->
+		<insert>
+			dependencies {
+				implementation 'com.applovin.mediation:adcolony-adapter:4.8.0.2'
+			}
+		</insert>
+		<!-- Fyber -->
+		<insert>
+			dependencies {
+				implementation 'com.applovin.mediation:fyber-adapter:8.1.5.1'
+			}
+		</insert>
+		<!-- UnityAds -->
+		<insert>
+			dependencies {
+				implementation 'com.applovin.mediation:unityads-adapter:4.2.1.1'
+			}
+		</insert>
+		<!-- Ironsource -->
+		<insert>
+			repositories {
+				maven { url "https://android-sdk.is.com" }
+			}
+			dependencies {
+				implementation 'com.applovin.mediation:ironsource-adapter:7.2.3.1.0'
+			}
+		</insert>
+		<!-- InMoby -->
+		<insert>
+			android {
+				compileOptions {
+					sourceCompatibility 1.8
+					targetCompatibility 1.8
+				}
+			}
+			dependencies {
+				implementation 'com.applovin.mediation:inmobi-adapter:10.0.8.1'
+			}
+		</insert>
+		<!-- Mintegral -->
+		<insert>
+			repositories {
+				maven { url "https://dl-maven-android.mintegral.com/repository/mbridge_android_sdk_oversea" }
+			}
+			dependencies {
+				implementation 'com.applovin.mediation:mintegral-adapter:16.1.81.0'
+			}
+		</insert>
+		<!-- Pangle (Bytedance) -->
+		<insert>
+			repositories {
+				maven { url "https://artifact.bytedance.com/repository/pangle" }
+			}
+			dependencies {
+				implementation 'com.applovin.mediation:bytedance-adapter:4.5.0.6.0'
+			}
+		</insert>
+		<!-- Smaato -->
+		<insert>
+			repositories {
+				maven { url "https://s3.amazonaws.com/smaato-sdk-releases/" }
+			}
+			dependencies {
+				implementation 'com.applovin.mediation:smaato-adapter:21.8.3.2'
+			}
+		</insert>
+		<!-- TapJoy -->
+		<insert>
+			repositories {
+				maven { url "https://sdk.tapjoy.com" }
+			}
+			dependencies {
+				implementation 'com.applovin.mediation:tapjoy-adapter:12.10.0.1'
+			}
+		</insert>
+		<!-- Vungle -->
+		<insert>
+			dependencies {
+				implementation 'com.applovin.mediation:vungle-adapter:6.11.0.2'
+			}
+		</insert>
+                
+	</buildGradleAdditions>
+
+	<prebuildCopies>
+				<copyDir src="$S(PluginDir)/External/Android/Integration" dst="$S(BuildDir)/src"/>
+				<copyDir src="$S(PluginDir)/External/Android/Security" dst="$S(BuildDir)/res/xml"/>
+	</prebuildCopies>
+
+
+	<proguardAdditions>
+		<insert>
+			-dontwarn com.applovin.**
+			-keep class com.applovin.** { *; }
+			-keep class com.google.android.gms.ads.identifier.** { *; }
+		</insert>
+	</proguardAdditions>
+    
+	<gameActivityImportAdditions>
+				<insert>
+					<![CDATA[
+						import com.applovin.sdk.AppLovinSdk;
+						import com.applovin.sdk.AppLovinSdkConfiguration;
+						
+						import com.applovin.unreal.UnrealALRewardedVideo;
+						import com.applovin.unreal.UnrealALInterstitial;
+						import com.applovin.unreal.UnrealALPrivacy;
+					]]>
+				</insert>
+	</gameActivityImportAdditions>
+
+	<gameActivityClassAdditions>
+				<insert>
+					<![CDATA[
+					private static boolean Initialized; 
+					
+					private static NativeActivity activity;
+					
+					public void AndroidThunkJava_AppLovinShowDebugger()
+						{
+							Log.debug("AppLovinSDK: Try Show debugger");
+							AppLovinSdk.getInstance( this ).showMediationDebugger();
+						}
+					]]>
+				</insert>
+	</gameActivityClassAdditions>
+
+	<gameActivityOnCreateAdditions>
+		<insert>
+			<![CDATA[
+			
+				activity = this;
+			
+				// Please make sure to set the mediation provider value to "max" to ensure proper functionality
+				AppLovinSdk.getInstance( this ).setMediationProvider( "max" );
+				
+				AppLovinSdk.getInstance( this ).getSettings().setVerboseLogging( true );
+				
+				AppLovinSdk.initializeSdk( this, new AppLovinSdk.SdkInitializationListener() {
+					@Override
+					public void onSdkInitialized(final AppLovinSdkConfiguration configuration)
+					{
+						UnrealALRewardedVideo.init(activity);
+						UnrealALInterstitial.init(activity);
+						
+						UnrealALPrivacy.init(activity, configuration);
+						
+						Initialized = true;
+					}
+				} );
+			]]>
+		</insert>
+	</gameActivityOnCreateAdditions>
+
+</root>
