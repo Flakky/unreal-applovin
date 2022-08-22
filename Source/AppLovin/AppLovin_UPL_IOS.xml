@@ -15,13 +15,13 @@
 				<true>
 					<setElement result="AppLovinSdkKeyElem" value="key" text="AppLovinSdkKey"/>
 					<addElement tag="$" name="AppLovinSdkKeyElem"/>
-					<setElement result="AppLovinSdkValueElem" value="string" text="R5ZeDg0t8rV5BQ4h_72SUwzDKUOipd1Ju_H3yph9eKZV6NZBDqI_rLKZmyFWiyFWdOn4ITSHwMdob2TtWHuzio"/>
+					<setElement result="AppLovinSdkValueElem" value="string" text="YOUR_APPLOVIN_SDK_KEY_HERE"/>
 					<addElement tag="$" name="AppLovinSdkValueElem"/>
 
 					<!-- AdMob -->
 					<setElement result="AdMobSdkKeyElem" value="key" text="GADApplicationIdentifier"/>
 					<addElement tag="$" name="AdMobSdkKeyElem"/>
-					<setElement result="AdMobSdkValueElem" value="string" text="ca-app-pub-8420324982512207~2335755855"/>
+					<setElement result="AdMobSdkValueElem" value="string" text="YOUR_ADMOB_APP_ID_HERE"/>
 					<addElement tag="$" name="AdMobSdkValueElem"/>
 
 					<!-- Disable App Transport Security -->
