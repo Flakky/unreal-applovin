@@ -41,10 +41,35 @@ enum class EAppLovinInterstitialErrorEventType : uint8
 	FailedToLoad
 };
 
+USTRUCT(BlueprintType)
+struct FAppLovinRevenueInfo
+{
+	GENERATED_BODY()
+
+	UPROPERTY(BlueprintReadOnly)
+	float Revenue;
+
+	UPROPERTY(BlueprintReadOnly)
+	FString CurrencyCode = "USD";
+
+	UPROPERTY(BlueprintReadOnly)
+	FString Network;
+
+	UPROPERTY(BlueprintReadOnly)
+	FString UnitID;
+
+	UPROPERTY(BlueprintReadOnly)
+	FString Placement;
+	
+	UPROPERTY(BlueprintReadOnly)
+	FString Country;
+};
+
 DECLARE_DYNAMIC_MULTICAST_DELEGATE_OneParam(FAppLovinRewardedVideoEvent, EAppLovinRewardedVideoEventType, EventType);
 DECLARE_DYNAMIC_MULTICAST_DELEGATE_ThreeParams(FAppLovinRewardedVideoErrorEvent, EAppLovinRewardedErrorEventType, EventType, int, Code, FString, Message);
 DECLARE_DYNAMIC_MULTICAST_DELEGATE_OneParam(FAppLovinInterstitialEvent, EAppLovinInterstitialEventType, EventType);
 DECLARE_DYNAMIC_MULTICAST_DELEGATE_ThreeParams(FAppLovinInterstitialErrorEvent, EAppLovinInterstitialErrorEventType, EventType, int, Code, FString, Message);
+DECLARE_DYNAMIC_MULTICAST_DELEGATE_OneParam(FAppLovinRevenueEvent, FAppLovinRevenueInfo, RevenueInfo);
 
 UCLASS()
 class APPLOVIN_API UAppLovinProxy : public UObject
@@ -64,6 +89,9 @@ public:
 	
 	UPROPERTY(BlueprintAssignable)
 	FAppLovinInterstitialErrorEvent OnInterstitialErrorEvent;
+		
+	UPROPERTY(BlueprintAssignable)
+	FAppLovinRevenueEvent OnRevenue;
 
 	/** Show rewarded video to a user
 	* @Placement - Placement name, which you setup in your AppLovin dashboard

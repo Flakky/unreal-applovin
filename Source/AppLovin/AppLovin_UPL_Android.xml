@@ -47,13 +47,13 @@
 		<!-- Facebook -->
 		<insert>
 			dependencies {
-				implementation 'com.applovin.mediation:facebook-adapter:6.11.0.5'
+				implementation 'com.applovin.mediation:facebook-adapter:6.12.0.0'
 			}
 		</insert>
 		<!-- AdMob -->
 		<insert>
 			dependencies {
-				implementation 'com.applovin.mediation:google-adapter:21.0.0.3'
+				implementation 'com.applovin.mediation:google-adapter:21.3.0.2'
 			}
 		</insert>
 		<!-- AdColony -->
@@ -65,13 +65,13 @@
 		<!-- Fyber -->
 		<insert>
 			dependencies {
-				implementation 'com.applovin.mediation:fyber-adapter:8.1.5.1'
+				implementation 'com.applovin.mediation:fyber-adapter:8.2.1.0'
 			}
 		</insert>
 		<!-- UnityAds -->
 		<insert>
 			dependencies {
-				implementation 'com.applovin.mediation:unityads-adapter:4.2.1.1'
+				implementation 'com.applovin.mediation:unityads-adapter:4.4.1.0'
 			}
 		</insert>
 		<!-- Ironsource -->
@@ -80,7 +80,7 @@
 				maven { url "https://android-sdk.is.com" }
 			}
 			dependencies {
-				implementation 'com.applovin.mediation:ironsource-adapter:7.2.3.1.0'
+				implementation 'com.applovin.mediation:ironsource-adapter:7.2.5.0.1'
 			}
 		</insert>
 		<!-- InMoby -->
@@ -92,7 +92,7 @@
 				}
 			}
 			dependencies {
-				implementation 'com.applovin.mediation:inmobi-adapter:10.0.8.1'
+				implementation 'com.applovin.mediation:inmobi-adapter:10.1.2.0'
 			}
 		</insert>
 		<!-- Mintegral -->
@@ -101,7 +101,7 @@
 				maven { url "https://dl-maven-android.mintegral.com/repository/mbridge_android_sdk_oversea" }
 			}
 			dependencies {
-				implementation 'com.applovin.mediation:mintegral-adapter:16.1.81.0'
+				implementation 'com.applovin.mediation:mintegral-adapter:16.2.61.1'
 			}
 		</insert>
 		<!-- Pangle (Bytedance) -->
@@ -110,7 +110,7 @@
 				maven { url "https://artifact.bytedance.com/repository/pangle" }
 			}
 			dependencies {
-				implementation 'com.applovin.mediation:bytedance-adapter:4.5.0.6.0'
+				implementation 'com.applovin.mediation:bytedance-adapter:4.8.0.8.1'
 			}
 		</insert>
 		<!-- Smaato -->
@@ -119,7 +119,7 @@
 				maven { url "https://s3.amazonaws.com/smaato-sdk-releases/" }
 			}
 			dependencies {
-				implementation 'com.applovin.mediation:smaato-adapter:21.8.3.2'
+				implementation 'com.applovin.mediation:smaato-adapter:21.8.5.0'
 			}
 		</insert>
 		<!-- TapJoy -->
@@ -128,13 +128,13 @@
 				maven { url "https://sdk.tapjoy.com" }
 			}
 			dependencies {
-				implementation 'com.applovin.mediation:tapjoy-adapter:12.10.0.1'
+				implementation 'com.applovin.mediation:tapjoy-adapter:12.11.0.0'
 			}
 		</insert>
 		<!-- Vungle -->
 		<insert>
 			dependencies {
-				implementation 'com.applovin.mediation:vungle-adapter:6.11.0.2'
+				implementation 'com.applovin.mediation:vungle-adapter:6.12.0.3'
 			}
 		</insert>
                 
@@ -157,55 +157,15 @@
 	<gameActivityImportAdditions>
 				<insert>
 					<![CDATA[
-						import com.applovin.sdk.AppLovinSdk;
-						import com.applovin.sdk.AppLovinSdkConfiguration;
-						
-						import com.applovin.unreal.UnrealALRewardedVideo;
-						import com.applovin.unreal.UnrealALInterstitial;
-						import com.applovin.unreal.UnrealALPrivacy;
+						import com.applovin.unreal.UnrealAppLovin;
 					]]>
 				</insert>
 	</gameActivityImportAdditions>
 
-	<gameActivityClassAdditions>
-				<insert>
-					<![CDATA[
-					private static boolean Initialized; 
-					
-					private static NativeActivity activity;
-					
-					public void AndroidThunkJava_AppLovinShowDebugger()
-						{
-							Log.debug("AppLovinSDK: Try Show debugger");
-							AppLovinSdk.getInstance( this ).showMediationDebugger();
-						}
-					]]>
-				</insert>
-	</gameActivityClassAdditions>
-
 	<gameActivityOnCreateAdditions>
 		<insert>
 			<![CDATA[
-			
-				activity = this;
-			
-				// Please make sure to set the mediation provider value to "max" to ensure proper functionality
-				AppLovinSdk.getInstance( this ).setMediationProvider( "max" );
-				
-				AppLovinSdk.getInstance( this ).getSettings().setVerboseLogging( true );
-				
-				AppLovinSdk.initializeSdk( this, new AppLovinSdk.SdkInitializationListener() {
-					@Override
-					public void onSdkInitialized(final AppLovinSdkConfiguration configuration)
-					{
-						UnrealALRewardedVideo.init(activity);
-						UnrealALInterstitial.init(activity);
-						
-						UnrealALPrivacy.init(activity, configuration);
-						
-						Initialized = true;
-					}
-				} );
+				UnrealAppLovin.init(this);
 			]]>
 		</insert>
 	</gameActivityOnCreateAdditions>

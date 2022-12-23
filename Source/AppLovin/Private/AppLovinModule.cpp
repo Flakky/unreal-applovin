@@ -41,7 +41,7 @@ void FAppLovinModule::StartupModule()
 #endif
 
 #if !UE_BUILD_SHIPPING
-	if(!AppLovinSettings->UseLibraryInDevBuilds)
+	if(WITH_EDITOR || !AppLovinSettings->UseLibraryInDevBuilds)
 	{
 		ProxyClass = UAppLovinProxyTest::StaticClass();
 	}

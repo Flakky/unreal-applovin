@@ -31,7 +31,15 @@ public class AppLovin : ModuleRules
 				"Core"
 			}
 			);
-			
+		
+		PrivateIncludePathModuleNames.AddRange(
+			new string[]
+			{
+				"Core",
+				"Engine",
+				"Settings"
+			}
+		);
 		
 		PrivateDependencyModuleNames.AddRange(
 			new string[]
@@ -39,8 +47,7 @@ public class AppLovin : ModuleRules
 				"CoreUObject",
 				"Engine",
 				"Slate",
-				"SlateCore",
-				"Settings"
+				"SlateCore"
 				// ... add private dependencies that you statically link with here ...	
 			}
 			);

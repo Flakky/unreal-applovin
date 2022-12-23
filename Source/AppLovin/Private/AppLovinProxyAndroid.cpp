@@ -22,9 +22,12 @@ void UAppLovinProxyAndroid::ShowDebugger()
 	JNIEnv* Env = FAndroidApplication::GetJavaEnv();
 	if (!Env) return;
 	
-	static auto Method = FJavaWrapper::FindMethod(Env, FJavaWrapper::GameActivityClassID, "AndroidThunkJava_AppLovinShowDebugger", "()V", false);
+	jclass Class = FAndroidApplication::FindJavaClassGlobalRef("com/applovin/unreal/UnrealAppLovin");
+	if(!Class) return;
 	
-	Env->CallVoidMethod(FJavaWrapper::GameActivityThis, Method);
+	static auto Method = FJavaWrapper::FindStaticMethod(Env, Class, "showDebugger", "()V", false);
+	
+	Env->CallStaticVoidMethod(Class, Method);
 }
 
 void UAppLovinProxyAndroid::ShowRewardedVideo(FString Placement)
@@ -258,13 +261,38 @@ JNI_METHOD void Java_com_applovin_unreal_UnrealALInterstitial_onInterstitialAdLo
 	});
 };
 
-JNI_METHOD void Java_com_applovin_unreal_UnrealALInterstitial_onInterstitialAdShowFailedThunkCpp(JNIEnv* jenv, jobject thiz, jint errorCode, jstring errorMessage)
+JNI_METHOD void Java_com_applovin_unreal_UnrealALRewardedVideo_onAppLovinRevenueThunkCpp(JNIEnv* jenv, jobject thiz, jdouble revenue, jstring network, jstring unitid, jstring placement, jstring country)
 {
-	int Code = (int)errorCode;
-	AsyncTask(ENamedThreads::GameThread, [Code]() {
-		Proxy->OnInterstitialErrorEvent.Broadcast(EAppLovinInterstitialErrorEventType::FailedToShow, Code, "");
+	FAppLovinRevenueInfo RevenueInfo;
+	RevenueInfo.Revenue = (float)revenue;
+	RevenueInfo.Network = FJavaHelper::FStringFromParam(jenv, network);
+	RevenueInfo.UnitID = FJavaHelper::FStringFromParam(jenv, unitid);
+	RevenueInfo.Placement = FJavaHelper::FStringFromParam(jenv, placement);
+	RevenueInfo.Country = FJavaHelper::FStringFromParam(jenv, country);
+
+	UE_LOG(LogTemp, Log, TEXT("AppLovin revenue: %f $ - %s. From %s"), RevenueInfo.Revenue, *RevenueInfo.UnitID, *RevenueInfo.Placement);
+	
+	AsyncTask(ENamedThreads::GameThread, [RevenueInfo]() {
+		Proxy->OnRevenue.Broadcast(RevenueInfo);
 	});
 };
+
+JNI_METHOD void Java_com_applovin_unreal_UnrealALInterstitial_onAppLovinRevenueThunkCpp(JNIEnv* jenv, jobject thiz, jdouble revenue, jstring network, jstring unitid, jstring placement, jstring country)
+{
+	FAppLovinRevenueInfo RevenueInfo;
+	RevenueInfo.Revenue = (float)revenue;
+	RevenueInfo.Network = FJavaHelper::FStringFromParam(jenv, network);
+	RevenueInfo.UnitID = FJavaHelper::FStringFromParam(jenv, unitid);
+	RevenueInfo.Placement = FJavaHelper::FStringFromParam(jenv, placement);
+	RevenueInfo.Country = FJavaHelper::FStringFromParam(jenv, country);
+
+	UE_LOG(LogTemp, Log, TEXT("AppLovin revenue: %f $ - %s. From %s"), RevenueInfo.Revenue, *RevenueInfo.UnitID, *RevenueInfo.Placement);
+	
+	AsyncTask(ENamedThreads::GameThread, [RevenueInfo]() {
+		Proxy->OnRevenue.Broadcast(RevenueInfo);
+	});
+};
+
 
 
 #endif

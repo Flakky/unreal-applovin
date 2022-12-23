@@ -25,6 +25,8 @@ UAppLovinProxy* Proxy;
 - (void)didClickAd:(MAAd *)ad;
 - (void)didHideAd:(MAAd *)ad;
 - (void)didFailToDisplayAd:(MAAd *)ad withError:(MAError *)error;
+- (void)didPayRevenueForAd:(MAAd *)ad;
+
 @end
 
 @implementation ALInterstitialViewController
@@ -113,6 +115,25 @@ UAppLovinProxy* Proxy;
 	});
 }
 
+- (void)didPayRevenueForAd:(MAAd *)ad
+{
+	FAppLovinRevenueInfo RevenueInfo;
+	RevenueInfo.Revenue = ad.revenue;
+	RevenueInfo.Network = FString(ad.networkName);
+	RevenueInfo.UnitID = FString(ad.adUnitIdentifier);
+	RevenueInfo.Placement = FString(ad.placement);
+	RevenueInfo.Country = FString([ALSdk shared].configuration.countryCode);
+
+	UE_LOG(LogTemp, Log, TEXT("AppLovin revenue: %f $ - %s. From %s"), RevenueInfo.Revenue, *RevenueInfo.UnitID, *RevenueInfo.Placement);
+	
+	AsyncTask(ENamedThreads::GameThread, [RevenueInfo]() {
+		if (Proxy)
+		{
+			Proxy->OnRevenue.Broadcast(RevenueInfo);
+		}
+	});
+}
+
 @end
 
 // Rewarded
@@ -130,6 +151,8 @@ UAppLovinProxy* Proxy;
 - (void)didStartRewardedVideoForAd:(MAAd *)ad;
 - (void)didCompleteRewardedVideoForAd:(MAAd *)ad;
 - (void)didRewardUserForAd:(MAAd *)ad withReward:(MAReward *)reward;
+- (void)didPayRevenueForAd:(MAAd *)ad;
+
 @end
 
 @implementation ALRewardedVideoViewController
@@ -246,6 +269,25 @@ UAppLovinProxy* Proxy;
 		if (Proxy)
 		{
 			Proxy->OnRewardedVideoEvent.Broadcast(EAppLovinRewardedVideoEventType::Rewarded);
+		}
+	});
+}
+
+- (void)didPayRevenueForAd:(MAAd *)ad
+{
+	FAppLovinRevenueInfo RevenueInfo;
+	RevenueInfo.Revenue = ad.revenue;
+	RevenueInfo.Network = FString(ad.networkName);
+	RevenueInfo.UnitID = FString(ad.adUnitIdentifier);
+	RevenueInfo.Placement = FString(ad.placement);
+	RevenueInfo.Country = FString([ALSdk shared].configuration.countryCode);
+
+	UE_LOG(LogTemp, Log, TEXT("AppLovin revenue: %f $ - %s. From %s"), RevenueInfo.Revenue, *RevenueInfo.UnitID, *RevenueInfo.Placement);
+	
+	AsyncTask(ENamedThreads::GameThread, [RevenueInfo]() {
+		if (Proxy)
+		{
+			Proxy->OnRevenue.Broadcast(RevenueInfo);
 		}
 	});
 }
