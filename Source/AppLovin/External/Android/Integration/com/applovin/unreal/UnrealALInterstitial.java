@@ -43,7 +43,9 @@ public class UnrealALInterstitial
     
     static private void createInterstitial(String uintId)
     {
-        Log.d("ApplovinLog", "Init AppLovin Interstitial");
+        if(uintId == null) return;
+        
+        Log.d("ApplovinLog", "Init AppLovin Interstitial " + uintId);
         
         MaxInterstitialAd Ad = new MaxInterstitialAd( uintId, activity );
         
@@ -57,6 +59,10 @@ public class UnrealALInterstitial
     
     static public void loadInterstitial(String uintId)
     {
+        if(InterstitialAds == null || uintId == null) return;
+        
+        Log.d("ApplovinLog", "Load Interstitial ad " + uintId);
+        
         MaxInterstitialAd Ad = InterstitialAds.get(uintId);
         if(Ad != null){
             Ad.loadAd();
@@ -68,7 +74,10 @@ public class UnrealALInterstitial
     
     static public void showInterstitial(String uintId)
     {
-        Log.d("ApplovinLog", "Show Interstitial ad");
+        Log.d("ApplovinLog", "Show Interstitial ad " + uintId);
+        
+        if(InterstitialAds == null || uintId == null) return;
+        
         MaxInterstitialAd Ad = InterstitialAds.get(uintId);
         
         if(Ad != null && Ad.isReady()){
@@ -133,6 +142,11 @@ public class UnrealALInterstitial
         @Override
         public void onAdRevenuePaid(final MaxAd ad)
         {
+            if(ad == null){
+                onAppLovinRevenueThunkCpp(0.0, "", "", "", "");
+                return;
+            }
+            
             double revenue = ad.getRevenue(); // In USD
             
             // Miscellaneous data

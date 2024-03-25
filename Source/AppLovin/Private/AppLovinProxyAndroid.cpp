@@ -26,8 +26,10 @@ void UAppLovinProxyAndroid::ShowDebugger()
 	if(!Class) return;
 	
 	static auto Method = FJavaWrapper::FindStaticMethod(Env, Class, "showDebugger", "()V", false);
+	if(!Method) return;
 	
 	Env->CallStaticVoidMethod(Class, Method);
+	Env->DeleteGlobalRef(Class);
 }
 
 void UAppLovinProxyAndroid::ShowRewardedVideo(FString Placement)
@@ -41,10 +43,12 @@ void UAppLovinProxyAndroid::ShowRewardedVideo(FString Placement)
 	jstring PlacementParam = Env->NewStringUTF(TCHAR_TO_UTF8(*Placement));
 	
 	static auto Method = FJavaWrapper::FindStaticMethod(Env, Class, "showRewardedVideo", "(Ljava/lang/String;)V", false);
+	if(!Method) return;
 	
 	Env->CallStaticVoidMethod(Class, Method, PlacementParam);
 
 	Env->DeleteLocalRef(PlacementParam);
+	Env->DeleteGlobalRef(Class);
 }
 
 void UAppLovinProxyAndroid::LoadRewardedVideo(FString Placement)
@@ -58,14 +62,18 @@ void UAppLovinProxyAndroid::LoadRewardedVideo(FString Placement)
 	jstring PlacementParam = Env->NewStringUTF(TCHAR_TO_UTF8(*Placement));
 	
 	static auto Method = FJavaWrapper::FindStaticMethod(Env, Class, "loadRewardedVideo", "(Ljava/lang/String;)V", false);
+	if(!Method) return;
 	
 	Env->CallStaticVoidMethod(Class, Method, PlacementParam);
 
 	Env->DeleteLocalRef(PlacementParam);
+	Env->DeleteGlobalRef(Class);
 }
 
 void UAppLovinProxyAndroid::ShowInterstitial(FString Placement)
 {
+	UE_LOG(LogTemp, Log, TEXT("Applovin Show interstitial"));
+	
 	JNIEnv* Env = FAndroidApplication::GetJavaEnv();
 	if (!Env) return;
 	
@@ -75,11 +83,14 @@ void UAppLovinProxyAndroid::ShowInterstitial(FString Placement)
 	jstring PlacementParam = Env->NewStringUTF(TCHAR_TO_UTF8(*Placement));
 	
 	static auto Method = FJavaWrapper::FindStaticMethod(Env, Class, "showInterstitial", "(Ljava/lang/String;)V", false);
+	if(!Method) return;
 	
 	Env->CallStaticVoidMethod(Class, Method, PlacementParam);
 
 	Env->DeleteLocalRef(PlacementParam);
-	
+	Env->DeleteGlobalRef(Class);
+
+	UE_LOG(LogTemp, Log, TEXT("Applovin Shown interstitial"));
 }
 
 void UAppLovinProxyAndroid::LoadInterstitial(FString Placement)
@@ -93,11 +104,12 @@ void UAppLovinProxyAndroid::LoadInterstitial(FString Placement)
 	jstring PlacementParam = Env->NewStringUTF(TCHAR_TO_UTF8(*Placement));
 	
 	static auto Method = FJavaWrapper::FindStaticMethod(Env, Class, "loadInterstitial", "(Ljava/lang/String;)V", false);
+	if(!Method) return;
 	
 	Env->CallStaticVoidMethod(Class, Method, PlacementParam);
 
 	Env->DeleteLocalRef(PlacementParam);
-	
+	Env->DeleteGlobalRef(Class);
 }
 
 void UAppLovinProxyAndroid::SetPrivacyHasUserConsent(bool HasUserConsent)
@@ -109,8 +121,11 @@ void UAppLovinProxyAndroid::SetPrivacyHasUserConsent(bool HasUserConsent)
 	if(!Class) return;
 	
 	static auto Method = FJavaWrapper::FindStaticMethod(Env, Class, "setHasUserConsent", "(Z)V", false);
+	if(!Method) return;
 	
 	Env->CallStaticVoidMethod(Class, Method, HasUserConsent);
+
+	Env->DeleteGlobalRef(Class);
 }
 	
 void UAppLovinProxyAndroid::SetPrivacyAgeRestrictedUser(bool IsAgeRestrictedUser)
@@ -122,8 +137,11 @@ void UAppLovinProxyAndroid::SetPrivacyAgeRestrictedUser(bool IsAgeRestrictedUser
 	if(!Class) return;
 	
 	static auto Method = FJavaWrapper::FindStaticMethod(Env, Class, "setIsAgeRestrictedUser", "(Z)V", false);
+	if(!Method) return;
 	
 	Env->CallStaticVoidMethod(Class, Method, IsAgeRestrictedUser);
+	
+	Env->DeleteGlobalRef(Class);
 }
 
 void UAppLovinProxyAndroid::SetPrivacyDoNotSell(bool DoNotSell)
@@ -135,8 +153,11 @@ void UAppLovinProxyAndroid::SetPrivacyDoNotSell(bool DoNotSell)
 	if(!Class) return;
 	
 	static auto Method = FJavaWrapper::FindStaticMethod(Env, Class, "setDoNotSell", "(Z)V", false);
+	if(!Method) return;
 	
 	Env->CallStaticVoidMethod(Class, Method, DoNotSell);
+
+	Env->DeleteGlobalRef(Class);
 }
 
 bool UAppLovinProxyAndroid::DoesUserApplyToGDPR()
@@ -148,10 +169,29 @@ bool UAppLovinProxyAndroid::DoesUserApplyToGDPR()
 	if(!Class) return false;
 	
 	static auto Method = FJavaWrapper::FindStaticMethod(Env, Class, "doesUserApplyToGDPR", "()Z", false);
+	if(!Method) return false;
 	
 	jboolean Out = Env->CallStaticBooleanMethod(Class, Method);
 
+	Env->DeleteGlobalRef(Class);
+
 	return (bool)Out;
+}
+
+void UAppLovinProxyAndroid::ShowCmpForExistingUser()
+{
+	JNIEnv* Env = FAndroidApplication::GetJavaEnv();
+	if (!Env) return;
+	
+	jclass Class = FAndroidApplication::FindJavaClassGlobalRef("com/applovin/unreal/UnrealALPrivacy");
+	if(!Class) return;
+	
+	static auto Method = FJavaWrapper::FindStaticMethod(Env, Class, "showCmpForExistingUser", "()V", false);
+	if(!Method) return;
+	
+	Env->CallStaticVoidMethod(Class, Method);
+
+	Env->DeleteGlobalRef(Class);
 }
 
 // Rewarded video callbacks
@@ -209,16 +249,18 @@ JNI_METHOD void Java_com_applovin_unreal_UnrealALRewardedVideo_onRewardedVideoAd
 JNI_METHOD void Java_com_applovin_unreal_UnrealALRewardedVideo_onRewardedVideoAdLoadFailedThunkCpp(JNIEnv* jenv, jobject thiz, jint errorCode, jstring errorMessage)
 {
 	int Code = (int)errorCode;
-	AsyncTask(ENamedThreads::GameThread, [Code]() {
-		Proxy->OnRewardedVideoErrorEvent.Broadcast(EAppLovinRewardedErrorEventType::FailedToLoad, Code, "");
+	const FString Error = FJavaHelper::FStringFromParam(jenv, errorMessage);
+	AsyncTask(ENamedThreads::GameThread, [jenv, Code, Error]() {
+		Proxy->OnRewardedVideoErrorEvent.Broadcast(EAppLovinRewardedErrorEventType::FailedToLoad, Code, Error);
 	});
 };
 
 JNI_METHOD void Java_com_applovin_unreal_UnrealALRewardedVideo_onRewardedVideoAdShowFailedThunkCpp(JNIEnv* jenv, jobject thiz, jint errorCode, jstring errorMessage)
 {
 	int Code = (int)errorCode;
-	AsyncTask(ENamedThreads::GameThread, [Code]() {
-		Proxy->OnRewardedVideoErrorEvent.Broadcast(EAppLovinRewardedErrorEventType::FailedToShow, Code, "");
+	const FString Error = FJavaHelper::FStringFromParam(jenv, errorMessage);
+	AsyncTask(ENamedThreads::GameThread, [jenv, Code, Error]() {
+		Proxy->OnRewardedVideoErrorEvent.Broadcast(EAppLovinRewardedErrorEventType::FailedToShow, Code, Error);
 	});
 };
 
@@ -256,8 +298,9 @@ JNI_METHOD void Java_com_applovin_unreal_UnrealALInterstitial_onInterstitialAdCl
 JNI_METHOD void Java_com_applovin_unreal_UnrealALInterstitial_onInterstitialAdLoadFailedThunkCpp(JNIEnv* jenv, jobject thiz, jint errorCode, jstring errorMessage)
 {
 	int Code = (int)errorCode;
-	AsyncTask(ENamedThreads::GameThread, [Code]() {
-		Proxy->OnInterstitialErrorEvent.Broadcast(EAppLovinInterstitialErrorEventType::FailedToLoad, Code, "");
+	const FString Error = FJavaHelper::FStringFromParam(jenv, errorMessage);
+	AsyncTask(ENamedThreads::GameThread, [Code, Error]() {
+		Proxy->OnInterstitialErrorEvent.Broadcast(EAppLovinInterstitialErrorEventType::FailedToLoad, Code, Error);
 	});
 };
 
@@ -293,6 +336,24 @@ JNI_METHOD void Java_com_applovin_unreal_UnrealALInterstitial_onAppLovinRevenueT
 	});
 };
 
+// Privacy callbacks
 
+JNI_METHOD void Java_com_applovin_unreal_UnrealALPrivacy_onCmpCompletedThunkCpp(JNIEnv* jenv, jobject thiz)
+{
+	AsyncTask(ENamedThreads::GameThread, []()
+	{
+		Proxy->OnCmpCompleted.Broadcast();
+	});
+};
+
+JNI_METHOD void Java_com_applovin_unreal_UnrealALPrivacy_onCmpErrorThunkCpp(JNIEnv* jenv, jobject thiz, jint errorCode, jstring errorMessage)
+{
+	int Code = (int)errorCode;
+	const FString Error = FJavaHelper::FStringFromParam(jenv, errorMessage);
+	AsyncTask(ENamedThreads::GameThread, [jenv, Code, Error]()
+	{
+		Proxy->OnCmpError.Broadcast(Code, Error);
+	});
+};
 
 #endif

@@ -303,10 +303,12 @@ static ALSdkConfiguration* alConfiguration;
 void UAppLovinProxyIOS::Init()
 {
 	Proxy = this;
-
-	[ALSdk shared].mediationProvider = @"max";
-    
-	[[ALSdk shared] initializeSdkWithCompletionHandler:^(ALSdkConfiguration *configuration) {
+	
+	ALSdk *sdk = [ALSdk shared];
+	
+	sdk.mediationProvider = @"max";
+	
+	[sdk initializeSdkWithCompletionHandler:^(ALSdkConfiguration *configuration) {
 		alConfiguration = configuration;
 	}];
 
@@ -384,6 +386,22 @@ void UAppLovinProxyIOS::SetPrivacyAgeRestrictedUser(bool IsAgeRestrictedUser)
 void UAppLovinProxyIOS::SetPrivacyDoNotSell(bool DoNotSell)
 {
 	[ALPrivacySettings setDoNotSell: DoNotSell ? YES : NO];
+}
+
+void UAppLovinProxyIOS::ShowCmpForExistingUser()
+{
+	ALCMPService *cmpService = [ALSdk shared].cmpService;
+
+	[cmpService showCMPForExistingUserWithCompletion:^(ALCMPError * _Nullable error) {
+		AsyncTask(ENamedThreads::GameThread, [&, error]() {
+			if (error)
+			{
+				OnCmpError.Broadcast(error.code, FString(error.message));
+				return;
+			}
+			OnCmpCompleted.Broadcast();
+		});
+	}];
 }
 
 bool UAppLovinProxyIOS::DoesUserApplyToGDPR()

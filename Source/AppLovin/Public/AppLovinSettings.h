@@ -13,9 +13,33 @@ class UAppLovinSettings : public UObject
 
 public:
 
-	UPROPERTY(Config, EditAnywhere, Category = "Widgets")
+	UPROPERTY(Config, EditAnywhere, Category = "Applovin")
+    FString SDKKeyIOS;
+
+    UPROPERTY(Config, EditAnywhere, Category = "Applovin")
+    FString SDKKeyAndroid;
+
+	UPROPERTY(Config, EditAnywhere, Category = "Applovin")
+	FString AdmobKeyIOS;
+
+	UPROPERTY(Config, EditAnywhere, Category = "Applovin")
+	FString AdmobKeyAndroid;
+
+	UPROPERTY(Config, EditAnywhere, Category = "Debug")
 	TSubclassOf<UAppLovinAdsWidgetTest> TestWidgetClass;
 
-	UPROPERTY(Config, EditAnywhere, Category = "Widgets")
+	UPROPERTY(Config, EditAnywhere, Category = "Debug")
 	bool UseLibraryInDevBuilds;
+
+	UPROPERTY(Config, EditAnywhere, Category = "Debug")
+	bool VerboseLogging;
+
+	UPROPERTY(Config, EditAnywhere, Category = "Constent")
+	bool ConsentFlow;
+
+	UPROPERTY(Config, EditAnywhere, Category = "Constent")
+	FString PrivacyPolicyURL;
+
+	UPROPERTY(Config, EditAnywhere, Category = "Constent")
+	FString TermsOfServiceURL;
 };

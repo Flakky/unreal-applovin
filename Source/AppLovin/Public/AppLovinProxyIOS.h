@@ -30,6 +30,8 @@ class APPLOVIN_API UAppLovinProxyIOS : public UAppLovinProxy
 
 	virtual void SetPrivacyDoNotSell(bool DoNotSell) override;
 
+	virtual void ShowCmpForExistingUser() override;
+
 	virtual bool DoesUserApplyToGDPR() override;
 
 #endif

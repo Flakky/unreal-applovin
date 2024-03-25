@@ -6,19 +6,6 @@
 #include "AppLovinAdsWidgetTest.h"
 #include "AppLovinSettings.h"
 
-UWorld* UAppLovinProxyTest::GetWorld() const
-{
-	if(IsTemplate()) return nullptr;
-
-	if(UWorld* GEngineWorld = GEngine->GetCurrentPlayWorld())
-	{
-		return GEngineWorld;
-	}
-
-	return IsValid(GetOuter()) ? GetOuter()->GetWorld() : nullptr;
-}
-
-
 void UAppLovinProxyTest::ShowRewardedVideo(FString Placement)
 {
 	const TSubclassOf<UAppLovinAdsWidgetTest> TestWidgetClass = GetDefault<UAppLovinSettings>()->TestWidgetClass;
@@ -51,8 +38,13 @@ void UAppLovinProxyTest::ShowInterstitial(FString Placement)
 
 void UAppLovinProxyTest::LoadInterstitial(FString Placement)
 {
-	if(!GetWorld()) return;
-	GetWorld()->GetTimerManager().SetTimer(LoadInterstitialTimer, this, &UAppLovinProxyTest::OnInterstitialLoaded, FMath::RandRange(3.f, 10.f));
+	if(GetWorld())
+	{
+		GetWorld()->GetTimerManager().SetTimer(LoadInterstitialTimer, this, &UAppLovinProxyTest::OnInterstitialLoaded, FMath::RandRange(3.f, 10.f));
+		return;
+	}
+
+	OnInterstitialLoaded();
 }
 
 void UAppLovinProxyTest::ShowDebugger()

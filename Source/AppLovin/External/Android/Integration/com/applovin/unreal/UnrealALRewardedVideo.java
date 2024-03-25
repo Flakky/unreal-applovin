@@ -49,7 +49,9 @@ public class UnrealALRewardedVideo
     
     static private void createRewardedVideo(String uintId)
     {
-        Log.d("ApplovinLog", "Init AppLovin RewardedVideo");
+        if(uintId == null) return;
+        
+        Log.d("ApplovinLog", "Init AppLovin RewardedVideo " + uintId);
             
         MaxRewardedAd Ad = MaxRewardedAd.getInstance( uintId, activity);
         
@@ -64,6 +66,8 @@ public class UnrealALRewardedVideo
     
     static public void loadRewardedVideo(String uintId)
     {
+        if(RewardedVideoAds == null || uintId == null) return;
+        
         Log.d("ApplovinLog", "Load RewardedVideo ad " + uintId);
         
         MaxRewardedAd Ad = RewardedVideoAds.get(uintId);
@@ -78,6 +82,9 @@ public class UnrealALRewardedVideo
     static public void showRewardedVideo(String uintId)
     {
         Log.d("ApplovinLog", "Show RewardedVideo ad " + uintId);
+        
+        if(RewardedVideoAds == null || uintId == null) return;
+        
         MaxRewardedAd Ad = RewardedVideoAds.get(uintId);
         
         if(Ad != null && Ad.isReady()){
@@ -164,6 +171,11 @@ public class UnrealALRewardedVideo
         @Override
         public void onAdRevenuePaid(final MaxAd ad)
         {
+            if(ad == null){
+                onAppLovinRevenueThunkCpp(0.0, "", "", "", "");
+                return;
+            }
+            
             double revenue = ad.getRevenue(); // In USD
             
             // Miscellaneous data

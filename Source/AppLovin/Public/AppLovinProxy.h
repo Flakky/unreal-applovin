@@ -70,6 +70,8 @@ DECLARE_DYNAMIC_MULTICAST_DELEGATE_ThreeParams(FAppLovinRewardedVideoErrorEvent,
 DECLARE_DYNAMIC_MULTICAST_DELEGATE_OneParam(FAppLovinInterstitialEvent, EAppLovinInterstitialEventType, EventType);
 DECLARE_DYNAMIC_MULTICAST_DELEGATE_ThreeParams(FAppLovinInterstitialErrorEvent, EAppLovinInterstitialErrorEventType, EventType, int, Code, FString, Message);
 DECLARE_DYNAMIC_MULTICAST_DELEGATE_OneParam(FAppLovinRevenueEvent, FAppLovinRevenueInfo, RevenueInfo);
+DECLARE_DYNAMIC_MULTICAST_DELEGATE(FCmpCompletedEvent);
+DECLARE_DYNAMIC_MULTICAST_DELEGATE_TwoParams(FCmpErrorEvent, int, Code, FString, Message);
 
 UCLASS()
 class APPLOVIN_API UAppLovinProxy : public UObject
@@ -92,6 +94,25 @@ public:
 		
 	UPROPERTY(BlueprintAssignable)
 	FAppLovinRevenueEvent OnRevenue;
+
+	UPROPERTY(BlueprintAssignable)
+	FCmpCompletedEvent OnCmpCompleted;
+
+	UPROPERTY(BlueprintAssignable)
+	FCmpErrorEvent OnCmpError;
+
+	virtual UWorld* GetWorld() const override
+	{
+		if (IsTemplate()) return nullptr;
+		
+		UWorld* PlayWorld = GEngine->GetCurrentPlayWorld();
+		if(PlayWorld) return PlayWorld;
+
+		PlayWorld = GetTransientPackage()->GetWorld();
+		if(PlayWorld) return PlayWorld;
+		
+		return IsValid(GetOuter()) ? GetOuter()->GetWorld() : nullptr;
+	}
 
 	/** Show rewarded video to a user
 	* @Placement - Placement name, which you setup in your AppLovin dashboard
@@ -147,6 +168,11 @@ public:
 	UFUNCTION(BlueprintPure)
 	virtual bool DoesUserApplyToGDPR(){return false;}
 
+	/** Show GDPR Flow to existing Users
+	*/
+	UFUNCTION(BlueprintCallable)
+	virtual void ShowCmpForExistingUser(){}
+	
 	/** Show AppLovin debugger
 	*/
 	UFUNCTION(BlueprintCallable)

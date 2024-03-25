@@ -17,9 +17,7 @@ private:
 	FTimerHandle LoadInterstitialTimer;
 
 public:
-
-	virtual UWorld* GetWorld() const override;
-
+	
 	virtual void ShowRewardedVideo(FString Placement) override;
 	
 	virtual void LoadRewardedVideo(FString Placement) override;
