@@ -71,20 +71,48 @@ public class AppLovin : ModuleRules
 			Dictionary<string, string> Bundles = new Dictionary<string, string>{};
 			
 			Bundles.Add("AppLovinSDK", "AppLovinSDKResources.bundle");
-			Bundles.Add("PAGAdSDK", "PAGAdSDK.bundle");
-			Bundles.Add("YandexMobileAds", "YandexMobileAdsBundle.bundle");
+			Bundles.Add("PAGAdSDK", "AdsGlobalSDK.bundle");
+			Bundles.Add("FBAudienceNetwork", "FBAudienceNetwork.bundle");
+			Bundles.Add("IASDKCore", "Fyber_Marketplace_SDK.bundle");
+			Bundles.Add("GoogleMobileAds", "GoogleMobileAdsResources.bundle");
+			Bundles.Add("IronSource", "IronSourcePrivacyInfo.bundle");
+			Bundles.Add("MTGSDK", "MTGSDK.bundle");
+			Bundles.Add("UnityAds", "UnityAdsResources.bundle");
+			Bundles.Add("UserMessagingPlatform", "UserMessagingPlatformResources.bundle");
+			Bundles.Add("VungleAdsSDK", "VungleAds.bundle");
 
 			List<string> IgnoreFrameworks = new List<string>();
 			
 			// Ignore some frameworks because of a collision with other plugins. Or by any other reason
-			// IgnoreFrameworks.Add("FBLPromises");
-			// IgnoreFrameworks.Add("GoogleAppMeasurement");
-			// IgnoreFrameworks.Add("GoogleAppMeasurementIdentitySupport");
-			// IgnoreFrameworks.Add("GoogleUtilities");
-			// IgnoreFrameworks.Add("nanopb");
-			// IgnoreFrameworks.Add("YandexMobileMetrica");
-			// IgnoreFrameworks.Add("YandexMobileMetricaCrashes");
-			// IgnoreFrameworks.Add("FBAudienceNetwork");
+			IgnoreFrameworks.Add("FBLPromises");
+			IgnoreFrameworks.Add("GoogleAppMeasurement");
+			IgnoreFrameworks.Add("GoogleAppMeasurementIdentitySupport");
+			IgnoreFrameworks.Add("GoogleUtilities");
+			IgnoreFrameworks.Add("nanopb");
+            IgnoreFrameworks.Add("FBAudienceNetwork");
+            IgnoreFrameworks.Add("IronSource");
+            IgnoreFrameworks.Add("libIronSourceAdapter");
+            IgnoreFrameworks.Add("libByteDanceAdapter");
+			
+			// We do not need Amazon, Yandex and Smaato yet 
+			IgnoreFrameworks.Add("DTBiOSSDK");
+			IgnoreFrameworks.Add("libAmazonAdMarketplaceAdapter");
+			IgnoreFrameworks.Add("libYandexAdapter");
+			IgnoreFrameworks.Add("YandexMobileMetrica");
+			IgnoreFrameworks.Add("YandexMobileMetricaCrashes");
+			IgnoreFrameworks.Add("YandexMobileAds");
+			IgnoreFrameworks.Add("libSmaatoAdapter");
+			IgnoreFrameworks.Add("OMSDK_Smaato");
+			IgnoreFrameworks.Add("SmaatoSDKBanner");
+			IgnoreFrameworks.Add("SmaatoSDKCore");
+			IgnoreFrameworks.Add("SmaatoSDKInAppBidding");
+			IgnoreFrameworks.Add("SmaatoSDKInterstitial");
+			IgnoreFrameworks.Add("SmaatoSDKNative");
+			IgnoreFrameworks.Add("SmaatoSDKOpenMeasurement");
+			IgnoreFrameworks.Add("SmaatoSDKOutstream");
+			IgnoreFrameworks.Add("SmaatoSDKRewardedAds");
+			IgnoreFrameworks.Add("SmaatoSDKRichMedia");
+			IgnoreFrameworks.Add("SmaatoSDKVideo");
 
 			string FrameworksPath = Path.Combine(ModuleDirectory, "../../ThirdParty/iOS");
 
@@ -122,7 +150,7 @@ public class AppLovin : ModuleRules
 			PublicSystemLibraries.Add("sqlite3");
 			PublicSystemLibraries.Add("xml2");
 			PublicSystemLibraries.Add("iconv");
-			
+            
 			AddEngineThirdPartyPrivateStaticDependencies( Target, "zlib" );
 
 			PublicFrameworks.AddRange(
@@ -144,16 +172,12 @@ public class AppLovin : ModuleRules
 				"WebKit"
 			});
 
-			string XcodeRoot = Utils.RunLocalProcessAndReturnStdOut("/usr/bin/xcode-select", "--print-path");
-			string SwiftStandardLibraryLinkPath = XcodeRoot + "/Toolchains/XcodeDefault.xctoolchain/usr/lib/swift/iphoneos";
-
 			// Enable Swift
-			PublicSystemLibraryPaths.AddRange(
-				new string[] {
-					SwiftStandardLibraryLinkPath,
-					"/usr/lib/swift"
-				}
-			);
+            string SDKROOT = Utils.RunLocalProcessAndReturnStdOut("/usr/bin/xcrun", "--sdk iphoneos --show-sdk-path");
+            PublicSystemLibraryPaths.Add(SDKROOT + "/usr/lib/swift");
+            PublicSystemLibraryPaths.Add(SDKROOT + "../../../../../../Toolchains/XcodeDefault.xctoolchain/usr/lib/swift/iphoneos");
+            PublicSystemLibraryPaths.Add(SDKROOT + "../../../../../../Toolchains/XcodeDefault.xctoolchain/usr/lib/swift-5.0/iphoneos");
+            PublicSystemLibraryPaths.Add(SDKROOT + "../../../../../../Toolchains/XcodeDefault.xctoolchain/usr/lib/swift-5.5/iphoneos");
 
 		}
 

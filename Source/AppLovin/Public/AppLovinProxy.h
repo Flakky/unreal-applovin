@@ -71,6 +71,7 @@ DECLARE_DYNAMIC_MULTICAST_DELEGATE_OneParam(FAppLovinInterstitialEvent, EAppLovi
 DECLARE_DYNAMIC_MULTICAST_DELEGATE_ThreeParams(FAppLovinInterstitialErrorEvent, EAppLovinInterstitialErrorEventType, EventType, int, Code, FString, Message);
 DECLARE_DYNAMIC_MULTICAST_DELEGATE_OneParam(FAppLovinRevenueEvent, FAppLovinRevenueInfo, RevenueInfo);
 DECLARE_DYNAMIC_MULTICAST_DELEGATE(FCmpCompletedEvent);
+DECLARE_DYNAMIC_MULTICAST_DELEGATE(FApplovinEvent);
 DECLARE_DYNAMIC_MULTICAST_DELEGATE_TwoParams(FCmpErrorEvent, int, Code, FString, Message);
 
 UCLASS()
@@ -82,6 +83,9 @@ public:
 
 	UPROPERTY(BlueprintAssignable)
 	FAppLovinRewardedVideoEvent OnRewardedVideoEvent;
+
+	UPROPERTY(BlueprintAssignable)
+	FApplovinEvent OnInit;
 
 	UPROPERTY(BlueprintAssignable)
 	FAppLovinRewardedVideoErrorEvent OnRewardedVideoErrorEvent;

@@ -15,6 +15,18 @@ UAppLovinProxy* Proxy;
 void UAppLovinProxyAndroid::Init()
 {
 	Proxy = this;
+
+	JNIEnv* Env = FAndroidApplication::GetJavaEnv();
+	if (!Env) return;
+	
+	jclass Class = FAndroidApplication::FindJavaClassGlobalRef("com/applovin/unreal/UnrealAppLovin");
+	if(!Class) return;
+	
+	static auto Method = FJavaWrapper::FindStaticMethod(Env, Class, "init", "()V", false);
+	if(!Method) return;
+	
+	Env->CallStaticVoidMethod(Class, Method);
+	Env->DeleteGlobalRef(Class);
 }
 
 void UAppLovinProxyAndroid::ShowDebugger()
@@ -193,6 +205,14 @@ void UAppLovinProxyAndroid::ShowCmpForExistingUser()
 
 	Env->DeleteGlobalRef(Class);
 }
+
+JNI_METHOD void Java_com_applovin_unreal_UnrealAppLovin_onInitThunkCpp(JNIEnv* jenv, jobject thiz)
+{
+	AsyncTask(ENamedThreads::GameThread, []()
+	{
+		Proxy->OnInit.Broadcast();
+	});	
+};
 
 // Rewarded video callbacks
 

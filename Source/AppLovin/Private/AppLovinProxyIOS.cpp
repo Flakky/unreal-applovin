@@ -4,6 +4,7 @@
 
 #include "AppLovinProxyIOS.h"
 #include "Async/Async.h"
+#include "IOSAppDelegate.h"
 
 #import <AppLovinSDK/AppLovinSDK.h>
 
@@ -297,6 +298,7 @@ UAppLovinProxy* Proxy;
 static ALInterstitialViewController *interstitialViewController;
 static ALRewardedVideoViewController *rewardedViewController;
 static ALSdkConfiguration* alConfiguration;
+static bool DoesApplyForGDPR = false; // Temp fix because of crash
 
 // Unreal
 
@@ -310,6 +312,16 @@ void UAppLovinProxyIOS::Init()
 	
 	[sdk initializeSdkWithCompletionHandler:^(ALSdkConfiguration *configuration) {
 		alConfiguration = configuration;
+
+		if(alConfiguration)
+		{
+			DoesApplyForGDPR = configuration.consentDialogState == ALConsentDialogStateApplies;
+		}
+		
+		AsyncTask(ENamedThreads::GameThread, [&]()
+		{
+			OnInit.Broadcast();
+		});
 	}];
 
 	interstitialViewController = [ALInterstitialViewController alloc];
@@ -380,7 +392,8 @@ void UAppLovinProxyIOS::SetPrivacyHasUserConsent(bool HasUserConsent)
 	
 void UAppLovinProxyIOS::SetPrivacyAgeRestrictedUser(bool IsAgeRestrictedUser)
 {
-	[ALPrivacySettings setIsAgeRestrictedUser: IsAgeRestrictedUser ? YES : NO];
+    // Removed from SDK
+	// [ALPrivacySettings setIsAgeRestrictedUser: IsAgeRestrictedUser ? YES : NO];
 }
 
 void UAppLovinProxyIOS::SetPrivacyDoNotSell(bool DoNotSell)
@@ -406,6 +419,6 @@ void UAppLovinProxyIOS::ShowCmpForExistingUser()
 
 bool UAppLovinProxyIOS::DoesUserApplyToGDPR()
 {
-	return alConfiguration.consentDialogState == ALConsentDialogStateApplies;
+	return DoesApplyForGDPR;
 }
 #endif

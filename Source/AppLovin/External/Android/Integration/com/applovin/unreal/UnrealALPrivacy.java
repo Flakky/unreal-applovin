@@ -31,7 +31,8 @@ public class UnrealALPrivacy
     
     static public void setIsAgeRestrictedUser(boolean HasUserConsent)
     {
-        AppLovinPrivacySettings.setIsAgeRestrictedUser( HasUserConsent, activity );
+        // Removed from SDK in MAX v13
+        // AppLovinPrivacySettings.setIsAgeRestrictedUser( HasUserConsent, activity );
         
         Log.d("ApplovinLog", "Set Is Age Restricted User");
     }

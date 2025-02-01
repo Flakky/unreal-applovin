@@ -16,38 +16,47 @@ public class UnrealAppLovin
     private static AppLovinSdk sdk = null;
     private static boolean initialized = false;
     private static NativeActivity activity = null;
+    private static UnrealAppLovinInitParams initParams;
+    
+    private native static void onInitThunkCpp();
     
     static public class UnrealAppLovinInitParams{
         public boolean enableConsentFlow = false;
         public String privacyPolicyURL = "";
         public String termsOfServiceURL = "";
     }
+    
+    public static void setParams(NativeActivity appActivity, UnrealAppLovinInitParams params)
+    {
+        initParams = params;
+        activity = appActivity;
+    }
 
-    public static void init(NativeActivity appActivity, UnrealAppLovinInitParams params)
+    public static void init()
     {
         if(initialized) return;
         
-        activity = appActivity;
-        
-        sdk = AppLovinSdk.getInstance(appActivity);
+        sdk = AppLovinSdk.getInstance(activity);
         
         sdk.setMediationProvider(AppLovinMediationProvider.MAX);
         
-        AppLovinSdkSettings settings = new AppLovinSdkSettings(appActivity);
-        settings.getTermsAndPrivacyPolicyFlowSettings().setEnabled(params.enableConsentFlow);
-        settings.getTermsAndPrivacyPolicyFlowSettings().setPrivacyPolicyUri(Uri.parse(params.privacyPolicyURL));
-        settings.getTermsAndPrivacyPolicyFlowSettings().setTermsOfServiceUri(Uri.parse(params.termsOfServiceURL));
+        AppLovinSdkSettings settings = new AppLovinSdkSettings(activity);
+        settings.getTermsAndPrivacyPolicyFlowSettings().setEnabled(initParams.enableConsentFlow);
+        settings.getTermsAndPrivacyPolicyFlowSettings().setPrivacyPolicyUri(Uri.parse(initParams.privacyPolicyURL));
+        settings.getTermsAndPrivacyPolicyFlowSettings().setTermsOfServiceUri(Uri.parse(initParams.termsOfServiceURL));
         
-        AppLovinSdk.initializeSdk(appActivity, new AppLovinSdk.SdkInitializationListener() {
+        AppLovinSdk.initializeSdk(activity, new AppLovinSdk.SdkInitializationListener() {
             @Override
             public void onSdkInitialized(final AppLovinSdkConfiguration configuration)
             {
-                UnrealALRewardedVideo.init(appActivity, sdk);
-                UnrealALInterstitial.init(appActivity, sdk);
+                UnrealALRewardedVideo.init(activity, sdk);
+                UnrealALInterstitial.init(activity, sdk);
                 
-                UnrealALPrivacy.init(appActivity, configuration);
+                UnrealALPrivacy.init(activity, configuration);
                 
                 initialized = true;
+                
+                onInitThunkCpp();
             }
         });
     }

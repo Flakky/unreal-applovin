@@ -48,7 +48,7 @@
 				mavenCentral()
 			}
 			dependencies {
-				implementation 'com.applovin:applovin-sdk:12.1.0'
+				implementation 'com.applovin:applovin-sdk:13.0.1'
 			
 				implementation 'com.google.android.ump:user-messaging-platform:2.1.0'
 			}
@@ -58,15 +58,15 @@
 		<!-- Facebook -->
 		<insert>
 			dependencies {
-				implementation 'com.applovin.mediation:facebook-adapter:6.16.0.2'
+				implementation 'com.applovin.mediation:facebook-adapter:6.18.0.1'
 			}
 		</insert>
-		<!-- AdMob -->
+		<!-- AdMob
 		<insert>
 			dependencies {
 				implementation 'com.applovin.mediation:google-adapter:22.3.0.0'
 			}
-		</insert>
+		</insert>-->
 		<!-- AdColony -->
 		<insert>
 			dependencies {
@@ -76,13 +76,13 @@
 		<!-- Fyber -->
 		<insert>
 			dependencies {
-				implementation 'com.applovin.mediation:fyber-adapter:8.2.5.0'
+				implementation 'com.applovin.mediation:fyber-adapter:8.3.4.0'
 			}
 		</insert>
 		<!-- UnityAds -->
 		<insert>
 			dependencies {
-				implementation 'com.applovin.mediation:unityads-adapter:4.9.2.1'
+				implementation 'com.applovin.mediation:unityads-adapter:4.12.5.0'
 			}
 		</insert>
 		<!-- Ironsource -->
@@ -91,7 +91,7 @@
 				maven { url "https://android-sdk.is.com" }
 			}
 			dependencies {
-				implementation 'com.applovin.mediation:ironsource-adapter:7.6.0.0.0'
+				implementation 'com.applovin.mediation:ironsource-adapter:8.6.0.0.0'
 			}
 		</insert>
 		<!-- InMoby -->
@@ -103,7 +103,7 @@
 				}
 			}
 			dependencies {
-				implementation 'com.applovin.mediation:inmobi-adapter:10.6.2.0'
+				implementation 'com.applovin.mediation:inmobi-adapter:10.8.0.0'
 			}
 		</insert>
 		<!-- Mintegral -->
@@ -112,7 +112,7 @@
 				maven { url "https://dl-maven-android.mintegral.com/repository/mbridge_android_sdk_oversea" }
 			}
 			dependencies {
-				implementation 'com.applovin.mediation:mintegral-adapter:16.5.91.0'
+				implementation 'com.applovin.mediation:mintegral-adapter:16.9.31.0'
 			}
 		</insert>
 		<!-- Pangle (Bytedance) -->
@@ -121,7 +121,7 @@
 				maven { url "https://artifact.bytedance.com/repository/pangle" }
 			}
 			dependencies {
-				implementation 'com.applovin.mediation:bytedance-adapter:5.6.0.4.0'
+				implementation 'com.applovin.mediation:bytedance-adapter:6.4.0.6.0'
 			}
 		</insert>
 		<!-- Smaato -->
@@ -130,7 +130,7 @@
 				maven { url "https://s3.amazonaws.com/smaato-sdk-releases/" }
 			}
 			dependencies {
-				implementation 'com.applovin.mediation:smaato-adapter:22.5.1.0'
+				implementation 'com.applovin.mediation:smaato-adapter:22.7.1.1'
 			}
 		</insert>
 		<!-- TapJoy -->
@@ -145,7 +145,7 @@
 		<!-- Vungle -->
 		<insert>
 			dependencies {
-				implementation 'com.applovin.mediation:vungle-adapter:7.1.0.0'
+				implementation 'com.applovin.mediation:vungle-adapter:7.4.2.2'
 			}
 		</insert>
                 
@@ -191,7 +191,7 @@
 		<insertNewline />
 		<insert>
 			<![CDATA[
-				UnrealAppLovin.init(this, initParams);
+				UnrealAppLovin.setParams(this, initParams);
 			]]>
 		</insert>
 	</gameActivityOnCreateAdditions>

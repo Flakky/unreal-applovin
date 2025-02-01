@@ -129,6 +129,7 @@ public class UnrealALRewardedVideo
         public void onAdDisplayed(final MaxAd maxAd) 
         {
             Log.d("ApplovinLog", "Displayed Rewarded ad");
+            onRewardedVideoAdStartedThunkCpp();
             onRewardedVideoAdShowedThunkCpp();
         }
         
@@ -145,26 +146,29 @@ public class UnrealALRewardedVideo
             Log.d("ApplovinLog", "Hide Rewarded ad");
             onRewardedVideoAdClosedThunkCpp();
         }
-        
-        @Override
-        public void onRewardedVideoStarted(final MaxAd maxAd) 
-        {
-            Log.d("ApplovinLog", "Started Rewarded ad");
-            onRewardedVideoAdStartedThunkCpp();
-        }
-        
-        @Override
-        public void onRewardedVideoCompleted(final MaxAd maxAd) 
-        {
-            Log.d("ApplovinLog", "Completed Rewarded ad");
-            onRewardedVideoAdCompletedThunkCpp();
-        }
+   
+// Removed from MAX v13     
+//         @Override
+//         public void onRewardedVideoStarted(final MaxAd maxAd) 
+//         {
+//             Log.d("ApplovinLog", "Started Rewarded ad");
+//             onRewardedVideoAdStartedThunkCpp();
+//         }
+//         
+//         @Override
+//         public void onRewardedVideoCompleted(final MaxAd maxAd) 
+//         {
+//             Log.d("ApplovinLog", "Completed Rewarded ad");
+//             onRewardedVideoAdCompletedThunkCpp();
+//         }
         
         @Override
         public void onUserRewarded(final MaxAd maxAd, final MaxReward maxReward)
         {
             Log.d("ApplovinLog", "User Rewarded by ad");
-            // Rewarded ad was displayed and user should receive the reward
+            
+            onRewardedVideoAdCompletedThunkCpp();
+            
             onRewardedVideoAdRewardedThunkCpp();
         }
         
